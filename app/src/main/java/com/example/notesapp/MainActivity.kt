@@ -12,6 +12,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -49,11 +51,25 @@ fun NotesScreen(vm: NotesViewModel = viewModel()) {
         Spacer(Modifier.height(12.dp))
         LazyColumn {
             items(notes, key = { it.id }) { note ->
-                NoteRowReadOnly(note = note)
+                NoteRowDeletable(note = note, onDelete = { vm.deleteNote(it)
+                })
                 Divider()
             }
         }
     }
+}
+
+@Composable
+fun NoteRowDeletable(note: Note, onDelete: (Note) -> Unit) {
+    ListItem(
+        headlineContent = { Text(note.title) },
+        trailingContent = {
+            IconButton(onClick = { onDelete(note) }) {
+                Icon(Icons.Filled.Delete, contentDescription =
+                    "Hapus")
+            }
+        }
+    )
 }
 
 @Composable
